@@ -6,7 +6,7 @@ import { request } from '@umijs/max';
 export async function currentUser(options?: { [key: string]: any }) {
     return request<{
         result: API.CurrentUser;
-    }>('/flower/v1/users/info', {
+    }>('/flower/v1/admin/info', {
         method: 'GET',
         params: {
             ...(options || {}),
@@ -29,6 +29,30 @@ export async function getUserList() {
         },
     });
 }
+export async function removeUser(data: Partial<API.ReviewData>) {
+    return request<Record<string, any>>('/flower/v1/users/delete', {
+        method: 'POST',
+        data: data
+    });
+}
+export async function createAdmin(data: Partial<API.ReviewData> ) {
+    return request<ProductInfo>('/flower/v1/admin/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: data
+    });
+}
+/** 获取规则列表 GET /api/rule */
+export async function getAdminList() {
+    return request<UserInfo>('/flower/v1/admin/list', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
     return request<Record<string, any>>('/api/login/outLogin', {
@@ -43,7 +67,7 @@ interface LoginParams {
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: LoginParams, options?: { [key: string]: any }) {
-    return request<API.LoginResult>('/flower/v1/users/login', {
+    return request<API.LoginResult>('/flower/v1/admin/login', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -69,6 +93,9 @@ export async function getProductList() {
         headers: {
             'Content-Type': 'application/json',
         },
+        params: {
+            category: 0
+        }
     });
 }
 export async function createProduct(data: Partial<API.ProductInfo> ) {

@@ -16,6 +16,7 @@ export type GlobalHeaderRightProps = {
 
 export const AvatarName = () => {
     const { initialState } = useModel('@@initialState');
+    console.log('currentUser', initialState?.currentUser);
     const { currentUser } = initialState || {};
     return <span className="anticon">{currentUser?.username}</span>;
 };

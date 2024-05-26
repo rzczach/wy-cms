@@ -64,8 +64,8 @@ export default [
             },
             {
                 path: '/admin/sub-page',
-                name: 'sub-page',
-                component: './Admin',
+                name: '管理员页面',
+                component: './admin/index',
             },
         ],
         

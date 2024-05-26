@@ -12,6 +12,7 @@ declare namespace API {
         profileImage: number;
         registrationTime: Date;
         lastLoginTime: Date;
+        canAdmin: string;
     };
 
     type LoginResult = {
@@ -27,7 +28,10 @@ declare namespace API {
         current?: number;
         pageSize?: number;
     };
-
+    interface LoginParams {
+        username: number;
+        password: number;
+    }
     type ProductInfo = {
         /**
           * 商品id
@@ -122,6 +126,7 @@ declare namespace API {
         userId: number;
         rating: number;
         comment: string;
+        canAdmin: boolean;
         reviewTime: string | Date; // 假设从后端获取的数据中reviewTime已被转换为字符串或已处理为可直接显示的日期格式
     }
     type UserData = {
