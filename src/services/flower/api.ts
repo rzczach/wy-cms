@@ -118,6 +118,13 @@ interface OrderInfo {
         list: API.OrderData[]
     }
 }
+/**订单管理相关---------------- */
+interface OrderOnlyInfo {
+    code: number;
+    result: {
+        info: API.OrderData
+    }
+}
 export async function getOrderList() {
     return request<OrderInfo>('/flower/v1/order/list', {
         method: 'GET',
@@ -136,17 +143,17 @@ export async function createOrder(data: Partial<API.OrderData>) {
     });
 }
 export async function getOrder(data: Partial<API.OrderData>) {
-    return request<OrderInfo>('/flower/v1/order/create', {
+    return request<OrderOnlyInfo>('/flower/v1/order/infoByOrderId', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        data: data
+        params: data
     });
 }
 export async function updateOrder(data: Partial<API.OrderData>) {
     return request<OrderInfo>('/flower/v1/order/update', {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },

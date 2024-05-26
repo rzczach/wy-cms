@@ -1,14 +1,7 @@
 import type { ProFormInstance } from '@ant-design/pro-components';
 import {
     ModalForm,
-    ProForm,
-   
-    ProFormDigit,
-
-    ProFormMoney,
     ProFormSelect,
-
-    ProFormTextArea,
 
 } from '@ant-design/pro-components';
 
@@ -18,7 +11,58 @@ import { useRef } from 'react';
 import { createOrder,  getOrder,  updateOrder,} from '@/services/flower/api';
 
 
+const Select = [
+    {
+        value: 'Pending',
+        label: '待配送'
+    },
+    {
+        value: 'Delivered',
+        label: '已配送'
+    },
+    {
+        value: 'Cancelled',
+        label: '已取消'
+    },
+    {
+        value: 'Processing',
+        label: '正在处理'
+    },
+    {
+        value: 'Shipped',
+        label: '已发货'
+    },
+    {
+        value: 'default',
+        label: '未知'
+    },
+   
+]
 
+const SelectOrder = [
+    {
+        value: 'Unpaid',
+        label: '未支付'
+    }, {
+        value: 'Paid',
+        label: '已支付'
+    },
+    {
+        value: 'Shipped',
+        label: '已发货'
+    }, {
+        value: 'Cancelled',
+        label: '已取消'
+    },
+    {
+        value: 'Completed',
+        label: '已完成'
+    }, {
+        value: 'Refunded',
+        label: '已退款'
+    },
+   
+]
 
 export default (props: { open: boolean, onOpenChange: any, orderId?: number }) => {
     const formRef = useRef<
@@ -42,11 +86,11 @@ export default (props: { open: boolean, onOpenChange: any, orderId?: number }) =
             params={{ id: '100' }}
             formKey="base-form-use-demo"
             request={async () => {
-                console.log('request', props.orderId);
+               
                 if (props.orderId) {
                     const res = await getOrder({ orderId: props.orderId });
-                    console.log('res-0--', res);
-                    return res.result;
+                    
+                    return res.result.info;
                 }
                 return {} as any;
             }}
@@ -54,148 +98,17 @@ export default (props: { open: boolean, onOpenChange: any, orderId?: number }) =
         >
             <ProFormSelect
                 width="xs"
-                options={[
-                    {
-                        value: 1,
-                        label: '花束',
-                    },
-                    {
-                        value: 2,
-                        label: '礼盒',
-                    },
-                    {
-                        value: 3,
-                        label: '蛋糕',
-                    },
-                    {
-                        value: 4,
-                        label: '花篮',
-                    },
-                    {
-                        value: 5,
-                        label: '绿植',
-                    },
-                    {
-                        value: 6,
-                        label: '手提花篮',
-                    },
-                    {
-                        value: 7,
-                        label: '周花',
-                    }
-                ]}
-                name="category"
-                label="类别"
+                options={Select}
+                name="deliveryStatus"
+                label="配送状态"
             />
             <ProFormSelect
                 width="xs"
-                options={[
-                    {
-                        value: 1,
-                        label: '爱情',
-                    },
-                    {
-                        value: 2,
-                        label: '生日',
-                    },
-                    {
-                        value: 3,
-                        label: '友情',
-                    },
-                    {
-                        value: 4,
-                        label: '探病',
-                    },
-                    {
-                        value: 5,
-                        label: '道歉',
-                    },
-                    {
-                        value: 6,
-                        label: '问候',
-                    },
-                    {
-                        value: 7,
-                        label: '感谢',
-                    },
-                    {
-                        value: 8,
-                        label: '哀思',
-                    },
-                    {
-                        value: 9,
-                        label: '商务',
-                    }
-                ]}
-                name="occasion"
-                label="场景"
+                options={SelectOrder}
+                name="orderStatus"
+                label="订单状态"
             />
-            <ProFormSelect
-                width="xs"
-                options={[
-                    {
-                        value: 1,
-                        label: '玫瑰',
-                    },
-                    {
-                        value: 2,
-                        label: '百合',
-                    },
-                    {
-                        value: 3,
-                        label: '康乃馨',
-                    },
-                    {
-                        value: 4,
-                        label: '向日葵',
-                    },
-                    {
-                        value: 5,
-                        label: '满天星',
-                    },
-                    {
-                        value: 6,
-                        label: '郁金香',
-                    },
-                    {
-                        value: 7,
-                        label: '菊花',
-                    },
-                    {
-                        value: 8,
-                        label: '其他',
-                    }]
-                }
-                name="flowerMaterial"
-                label="材质"
-            />
-            <ProForm.Group>
-                <ProFormDigit name="stemCount" label="数量" width="lg" />
-            </ProForm.Group>
-            <ProFormMoney
-                width="md"
-                name="price"
-                label="价格"
-                fieldProps={{
-                    numberPopoverRender: true,
-                }}
-            />
-            <ProFormMoney
-                width="md"
-                name="originaPrice"
-                label="划线价格"
-                fieldProps={{
-                    numberPopoverRender: true,
-                }}
-            />
-            <ProForm.Group>
-                <ProFormDigit name="salesVolume" label="售卖数量" width="lg" />
-            </ProForm.Group>
-            <ProFormTextArea
-                colProps={{ span: 24 }}
-                name="detail"
-                label="详情"
-            />
+            
 
         </ModalForm>
     );

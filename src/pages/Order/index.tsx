@@ -6,8 +6,9 @@ import {
     ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Drawer, Tag } from 'antd';
+import { Drawer, Select, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
+import UpdateForm from './components/UpdateForm';
 
 const formatStatus = (status: API.DeliveryStatus | API.OrderStatus, type: 'delivery' | 'order') => {
     let color: any;
@@ -72,12 +73,16 @@ const formatStatus = (status: API.DeliveryStatus | API.OrderStatus, type: 'deliv
 
     return <Tag color={color}>{text}</Tag>;
 };
+
 const Order: React.FC = () => {
 
     const actionRef = useRef<ActionType>();
     const [currentRow, setCurrentRow] = useState<API.OrderData>();
+    const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const [showDetail, setShowDetail] = useState<boolean>(false);
-
+    const handleChange = (value: string) => {
+        console.log(value);
+    }
     const columns: ProColumns<API.OrderData>[] = [
         {
             title: '订单ID',
@@ -89,11 +94,7 @@ const Order: React.FC = () => {
             dataIndex: 'userId',
             key: 'userId',
         },
-        {
-            title: '商品Id',
-            dataIndex: 'productId',
-            key: 'productId',
-        },
+        
         {
             title: '订单编号',
             dataIndex: 'orderNo',
@@ -114,11 +115,6 @@ const Order: React.FC = () => {
             title: '支付方式',
             dataIndex: 'paymentMethod',
             key: 'paymentMethod',
-        },
-        {
-            title: '配送地址',
-            dataIndex: 'deliveryAddress',
-            key: 'deliveryAddress',
         },
         {
             title: '配送状态',
@@ -142,6 +138,16 @@ const Order: React.FC = () => {
             dataIndex: 'option',
             render: (_, record) => [
                 <a
+                    key="update"
+                    onClick={() => {
+
+                        setCurrentRow(record);
+                        handleModalOpen(true);
+                    }}
+                >
+                    修改|
+                </a>,
+                <a
                     key="config1"
                     onClick={() => {
                         setCurrentRow(record);
@@ -154,7 +160,34 @@ const Order: React.FC = () => {
             ],
         },
     ];
+    const detailColumns = columns.slice(0, -1).concat({
+        title: '修改订单',
+        dataIndex: 'option',
+        render: (_, record) => [
+            <Select
+                defaultValue={'修改订单状态'}
+                key={'123'}
+                style={{ width: 120 }}
+                onChange={handleChange}
+                options={[
+                    { value: 'jack', label: 'Jack' },
+                    { value: 'lucy', label: 'Lucy' },
+                    { value: 'Yiminghe', label: 'yiminghe' },
+                    { value: 'disabled', label: 'Disabled', disabled: true },
+                ]}
+            />,
+            <a
+                key="config1"
+                onClick={() => {
+                    setCurrentRow(record);
+                    setShowDetail(true);
+                }}
+            >
+                修改配送状态
+            </a>,
 
+        ],
+    });
     return (
         <PageContainer>
             <ProTable<API.OrderData, API.PageParams>
@@ -191,10 +224,16 @@ const Order: React.FC = () => {
                         params={{
                             id: currentRow?.orderId,
                         }}
-                        columns={columns as ProDescriptionsItemProps<API.OrderData>[]}
+                        columns={detailColumns as ProDescriptionsItemProps<API.OrderData>[]}
                     />
                 )}
             </Drawer>
+            <UpdateForm open={createModalOpen} onOpenChange={(y: boolean) => {
+                if (actionRef.current) {
+                    actionRef.current.reload();
+                }
+                handleModalOpen(y)
+            }} orderId={currentRow?.orderId} />
         </PageContainer>
     );
 };
